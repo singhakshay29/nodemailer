@@ -113,12 +113,12 @@ app.post("/success-Payment-email", async (req, res) => {
 });
 
 app.post("/failed-Payment-email", async (req, res) => {
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: "akshay2898.as@gmail.com",
-      subject: "Transaction Failed ",
-      text: `Your recent transaction has been Failed.`,
-      html: `
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: "akshay2898.as@gmail.com",
+    subject: "Transaction Failed ",
+    text: `Your recent transaction has been Failed.`,
+    html: `
        <div style="font-family: Figtree, sans-serif; margin: 0; padding: 0;">
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" align="center" style="max-width: 600px; background-color: #ffffff !important; border-radius: 12px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); text-align: center; border: 1px solid #ddd;" bgcolor="#ffffff">
     
@@ -181,23 +181,23 @@ app.post("/failed-Payment-email", async (req, res) => {
   }
 </style>
       `,
-    };
-  
-    try {
-      await transporter.sendMail(mailOptions);
-      res.status(200).json({ message: "Email sent successfully" });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  });
+  };
 
-  app.post("/otp", async (req, res) => {
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: "akshay2898.as@gmail.com",
-      subject: "Transaction Failed ",
-      text: `Your recent transaction has been Failed.`,
-      html: `
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ message: "Email sent successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post("/otp", async (req, res) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: "akshay2898.as@gmail.com",
+    subject: "Transaction Failed ",
+    text: `Your recent transaction has been Failed.`,
+    html: `
       <div style="font-family: Figtree, sans-serif; margin: 0; padding: 0;">
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" align="center" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); text-align: center; border: 1px solid #ddd;">
     
@@ -259,17 +259,103 @@ app.post("/failed-Payment-email", async (req, res) => {
   </table>
 </div>
 
-      `
-    };
-  
-    try {
-      await transporter.sendMail(mailOptions);
-      res.status(200).json({ message: "Email sent successfully" });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  });
+      `,
+  };
 
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ message: "Email sent successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+app.post("/dailyReport", async (req, res) => {
+  const { formattedDate, payhub_data, merchant_data, gateway_data, url }=req.body;
+  const formatNumber = (num) => (num ? Math.round(num).toLocaleString() : '0');
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: "akshay2898.as@gmail.com",
+    subject: "Daily Transaction Report ",
+    text: ``,
+    html: `
+    <div style="font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; background: #fff; color: #000;">
+      <div style="max-width: 700px; margin: 40px auto; padding: 20px;">
+
+        <!-- Header -->
+        <div style="text-align: left; margin-bottom: 30px;">
+          <div style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">Daily Transaction Report</div>
+          <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
+            <tr>
+              <td style="font-size: 14px; color: #555;">${formattedDate}</td>
+              <td align="right" style="font-size: 14px;">
+               Total Volume:  
+              </td>
+              <tr>
+              <td align="left" style="font-size: 14px;">
+              </td>
+               <td align="right" style="font-size: 14px;">
+              <strong>₹${formatNumber(payhub_data)}</strong>
+              </td>
+              </tr>
+            </tr>
+          </table>
+        </div>
+      <hr style="border: 1px solid #00000033; margin: 10px 0;" />
+
+        <!-- Merchants Section -->
+        <h3 style="font-size: 16px; font-weight: 600; margin: 20px 0 8px;">MERCHANTS</h3>
+        <table width="100%" cellpadding="0" cellspacing="0" style="border: 2px solid #eee; border-radius: 10px; margin-bottom: 30px;">
+          <tr>
+            <th align="left" style="padding: 10px; font-weight: 600;">MERCHANT</th>
+            <th align="right" style="padding: 10px; font-weight: 600;">VOLUME (₹)</th>
+          </tr>
+          ${merchant_data
+            .filter(item => item.yesterday > 0)
+            .map(item => `
+              <tr>
+                <td style="padding: 8px;">${(item.business_name || "NA").toUpperCase()}</td>
+                <td align="right" style="padding: 8px;">₹${formatNumber(item.yesterday)}</td>
+              </tr>
+            `)
+            .join('')}
+        </table>
+
+        <!-- Gateways Section -->
+         <h3 style="color: #444; text-transform: uppercase; font-weight: bold; border-bottom: 1px solid #ddd; padding-bottom: 8px; margin-top: 30px;font-size: 16px">Gateways</h3>
+          <table style="width: 100%; border-collapse: collapse;">
+            ${gateway_data
+              .map((item) => {
+                if (item.yesterday > 0) {
+                  return `
+                    <tr>
+                      <td style="padding: 8px; text-align: left;">${(item.gatewayName || "NA").toUpperCase()}</td>
+                      <td style="padding: 8px; text-align: right;">${formatNumber(item.yesterday) || 0}</td>
+                    </tr>
+                  `;
+                }
+                return ''; // Skip rows with no data
+              })
+              .join('')}
+          </table>
+
+        <!-- Download Button -->
+        <div style="text-align: center; margin-top: 30px;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #007bff; border-radius: 10px;">
+          <a href="${url}" style="background-color: #007bff; color: white; padding: 12px 20px; text-decoration: none; border-radius: 6px; font-size: 16px; display: inline-block;">Download Full Report</a>
+        </table>
+        </div>
+      </div>
+    </div>
+      `,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ message: "Email sent successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
