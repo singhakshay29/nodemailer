@@ -278,13 +278,20 @@ app.post("/dailyReport", async (req, res) => {
     subject: "Daily Transaction Report ",
     text: ``,
     html: `
-    <div style="font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; background: #fff; color: #000;">
-      <div style="max-width: 700px; margin: 40px auto; padding: 20px;">
-
+    <div style="font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; background: #F8F8F8; color: #000;">
+      <div style="height: 40px;"></div>
+      <div style="max-width: 600px;background:#FFF; margin: 10px auto; padding: 40px; border-radius: 12px;">
+     <div style="text-align: left; margin-bottom: 20px;">
+  <img 
+    src="https://csvpayhub.s3.ap-south-1.amazonaws.com/images/payhub_mjb4zl.png" 
+    alt="Pay"
+    style="max-width: 150px; height: 40px; display: block;" 
+  />
+</div>
         <!-- Header -->
-        <div style="text-align: left; margin-bottom: 30px;">
+        <div style="text-align: left; margin-bottom: 10px;">
           <div style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">Daily Transaction Report</div>
-          <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
+          <table width="100%" cellpadding="0" cellspacing="0">
             <tr>
               <td style="font-size: 14px; color: #555;">${formattedDate}</td>
               <td align="right" style="font-size: 14px;">
@@ -300,15 +307,22 @@ app.post("/dailyReport", async (req, res) => {
             </tr>
           </table>
         </div>
-      <hr style="border: 1px solid #00000033; margin: 10px 0;" />
+      <hr style="border: 1px solid #0000001A;" />
 
-        <!-- Merchants Section -->
-        <h3 style="font-size: 16px; font-weight: 600; margin: 20px 0 8px;">MERCHANTS</h3>
-        <table width="100%" cellpadding="0" cellspacing="0" style="border: 2px solid #eee; border-radius: 10px; margin-bottom: 30px;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="border: 2px solid #eee; border-radius: 10px; margin-top: 20px; margin-bottom: 30px;">
           <tr>
             <th align="left" style="padding: 10px; font-weight: 600;">MERCHANT</th>
             <th align="right" style="padding: 10px; font-weight: 600;">VOLUME (₹)</th>
           </tr>
+        <tr>
+  <td colspan="2" style="padding: 0;">
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td style="border-top: 1px solid #0000001A; line-height: 0; font-size: 0;">&nbsp;</td>
+      </tr>
+    </table>
+  </td>
+</tr>
           ${merchant_data
             .filter(item => item.yesterday > 0)
             .map(item => `
@@ -321,8 +335,20 @@ app.post("/dailyReport", async (req, res) => {
         </table>
 
         <!-- Gateways Section -->
-         <h3 style="color: #444; text-transform: uppercase; font-weight: bold; border-bottom: 1px solid #ddd; padding-bottom: 8px; margin-top: 30px;font-size: 16px">Gateways</h3>
-          <table style="width: 100%; border-collapse: collapse;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="border: 2px solid #eee; border-radius: 10px; margin-bottom: 30px;">
+          <tr>
+            <th align="left" style="padding: 10px; font-weight: 600;">Payment Gateway</th>
+            <th align="right" style="padding: 10px; font-weight: 600;">VOLUME (₹)</th>
+          </tr>
+         <tr>
+  <td colspan="2" style="padding: 0;">
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td style="border-top: 1px solid #0000001A; line-height: 0; font-size: 0;">&nbsp;</td>
+      </tr>
+    </table>
+  </td>
+</tr>
             ${gateway_data
               .map((item) => {
                 if (item.yesterday > 0) {
@@ -345,6 +371,7 @@ app.post("/dailyReport", async (req, res) => {
         </table>
         </div>
       </div>
+       <div style="height: 20px;"></div>
     </div>
       `,
   };
