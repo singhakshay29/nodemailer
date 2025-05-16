@@ -180,6 +180,7 @@ app.post("/failed-Payment-email", async (req, res) => {
     }
   }
 </style>
+
       `,
   };
 
@@ -278,101 +279,180 @@ app.post("/dailyReport", async (req, res) => {
     subject: "Daily Transaction Report ",
     text: ``,
     html: `
-    <div style="font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; background: #F8F8F8; color: #000;">
-      <div style="height: 40px;"></div>
-      <div style="max-width: 600px;background:#FFF; margin: 10px auto; padding: 40px; border-radius: 12px;">
-     <div style="text-align: left; margin-bottom: 20px;">
-  <img 
-    src="https://csvpayhub.s3.ap-south-1.amazonaws.com/images/payhub_mjb4zl.png" 
-    alt="Pay"
-    style="max-width: 150px; height: 40px; display: block;" 
-  />
-</div>
-        <!-- Header -->
-        <div style="text-align: left; margin-bottom: 10px;">
-          <div style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">Daily Transaction Report</div>
-          <table width="100%" cellpadding="0" cellspacing="0">
-            <tr>
-              <td style="font-size: 14px; color: #555;">${formattedDate}</td>
-              <td align="right" style="font-size: 14px;">
-               Total Volume:  
-              </td>
-              <tr>
-              <td align="left" style="font-size: 14px;">
-              </td>
-               <td align="right" style="font-size: 14px;">
+    <div
+  style="font-family: 'General Sans','Segoe UI', sans-serif; margin: 0; padding: 0; background: #F8F8F8; color: #000;">
+  <div style="max-width: 600px; background: #FFF; margin: 10px auto; border-radius: 12px;">
+    <table role="presentation" width="100%" style="height: 40px;">
+      <tr>
+        <td
+          style="position: relative; background: linear-gradient(to right, #111111, #383838); padding: 20px; border-top-left-radius: 12px; border-top-right-radius: 12px;">
+          <img src="https://csvpayhub.s3.ap-south-1.amazonaws.com/images/payhubWhite_ivid3r.png" alt="PayHub Logo"
+            style="max-width: 140px; display: block; color: #ffffff;">
+        </td>
+      </tr>
+      <tr>
+        <td align="right"
+          style=" padding: 10px 20px 10px 20px; font-weight: 600; font-size: 24px; line-height: 100%; letter-spacing: 0%;">
+          ${formattedDate}
+        </td>
+      </tr>
+    </table>
+    <div style="padding:  20px;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="height: 150px; margin-bottom: 10px;margin-top:20px; ">
+        <tr>
+          <td align="center" valign="middle">
+            <div style="font-size: 40px; font-weight: 600; line-height: 100%; margin-bottom: 20px;">
               <strong>₹${formatNumber(payhub_data)}</strong>
-              </td>
+            </div>
+            <div style="font-size: 24px; font-weight: 500;line-height: 1.2;color: #00000099;">
+              Total Volume
+            </div>
+          </td>
+        </tr>
+      </table>
+      <hr style="border: 1px solid #0000001A;" />
+      <table width="100%" cellpadding="0" cellspacing="0"
+        style="border: 2px solid #eee; border-radius: 10px; margin-top: 30px; margin-bottom: 30px;">
+        <tr>
+          <th align="left" style="padding: 10px; font-weight: 600;font-size: 20px;">MERCHANTS</th>
+          <th align="right" style="padding: 10px; font-weight: 600;font-size: 20px;">VOLUME (₹)</th>
+        </tr>
+        <tr>
+          <td colspan="2" style="padding: 0;">
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="border-top: 1px solid #0000001A; line-height: 0; font-size: 0;">&nbsp;</td>
               </tr>
+            </table>
+          </td>
+        </tr>
+        ${merchant_data
+        .filter(item => item.yesterday > 0)
+        .map(item => `
+        <tr>
+          <td style="padding: 8px;font-weight: 500;font-size: 20px;">${(item.business_name || "NA").toUpperCase()}</td>
+          <td align="right" style="padding: 8px;font-weight: 500;font-size: 20px;">₹${formatNumber(item.yesterday)}</td>
+        </tr>
+        `)
+        .join('')}
+      </table>
+      <table width="100%" cellpadding="0" cellspacing="0"
+        style="border: 2px solid #eee; border-radius: 10px; margin-bottom: 30px;">
+        <tr>
+          <th align="left" style="padding: 10px; font-weight: 600;font-size: 20px;">Payment Gateway</th>
+          <th align="right" style="padding: 10px; font-weight: 600;font-size: 20px;">VOLUME (₹)</th>
+        </tr>
+        <tr>
+          <td colspan="2" style="padding: 0;">
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="border-top: 1px solid #0000001A; line-height: 0; font-size: 0;">&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        ${gateway_data
+        .map((item) => {
+        if (item.yesterday > 0) {
+        return `
+        <tr>
+          <td style="padding: 8px; text-align: left;font-weight: 500;font-size: 20px;">${(item.gatewayName ||
+            "NA").toUpperCase()}</td>
+          <td style="padding: 8px; text-align: right;font-weight: 500;font-size: 20px;">${formatNumber(item.yesterday) ||
+            0}</td>
+        </tr>
+        `;
+        }
+        return '';
+        })
+        .join('')}
+      </table>
+      <div style="text-align: center; margin-top: 30px;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #007bff; border-radius: 10px;">
+          <a href="${url}"
+            style="background-color: #007bff; color: white; padding: 12px 20px; text-decoration: none; border-radius: 6px; font-size: 20px; display: inline-block;">Download
+            Full Report</a>
+        </table>
+      </div>
+    </div>
+
+  </div>
+  <div style="height: 20px;"></div>
+</div> 
+      `,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ message: "Email sent successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+app.post("/invitation", async (req, res) => {
+  const { formattedDate, payhub_data, merchant_data, gateway_data, url }=req.body;
+  const formatNumber = (num) => (num ? Math.round(num).toLocaleString() : '0');
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: "akshay2898.as@gmail.com",
+    subject: "Invitation",
+    text: ``,
+    html: `
+    <table width="100%" cellpadding="0" cellspacing="0">
+     <div style="margin:0; padding:0; font-family:General Sans,'Segoe UI', sans-serif; background-color:#f5f5f5; color:#000;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5;">
+      <tr>
+        <td>
+          <table align="center" cellpadding="0" cellspacing="0" width="100%" style="max-width: 700px; margin: 0 auto;">
+            <tr>
+              <td style="position: relative; background: linear-gradient(to right, #111111, #383838); padding: 20px; border-top-left-radius: 12px; border-top-right-radius: 12px;">
+                <img src="https://csvpayhub.s3.ap-south-1.amazonaws.com/images/payhubWhite_ivid3r.png" alt="PayHub Logo" style="max-width: 140px; display: block; color: #ffffff;">
+              </td>
+            </tr>
+            <tr>
+              <td style="background-color: #ffffff; padding: 40px; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
+                <h2 style="margin-top: 0; font-size: 22px;">Welcome to PayHub, Akshay!</h2>
+
+                <p style="font-size: 16px; line-height: 1.5;">
+                  You’ve been invited to join the <strong>PayHub Admin Portal</strong> as a <strong>Level 1 Sub-Admin.</strong>
+                </p>
+
+                <p style="font-size: 16px; line-height: 1.5;">
+                  You’ve been granted access to manage merchant accounts, payment gateways, and transaction tools within our secure admin portal.
+                </p>
+
+                <p style="font-size: 16px; line-height: 1.5;">
+                  To get started, click the button below to set up your account:
+                </p>
+
+                <p style="margin: 20px 0;">
+                   🔗
+                  <a href="https://example.com/accept" style="color: #1a83ff; font-size: 16px; border-radius: 6px; display: inline-block;">
+                    Accept Your Invitation
+                  </a>
+                </p>
+
+                <p style="font-size: 16px; line-height: 1.5;">
+                  If you weren’t expecting this invitation, you can safely ignore this email.
+                </p>
+
+                <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;" />
+
+                <p style="font-size: 16px;">
+                  We’re excited to have you on board!<br />
+                </p>
+                <strong>The PayHub Team</strong>
+
+                <p style="font-size: 12px; color: #000;">
+                  Need help? Contact us anytime at <a href="mailto:support@payhub.com" style="color: #1a83ff;">support@payhub.com</a>.
+                </p>
+              </td>
             </tr>
           </table>
-        </div>
-      <hr style="border: 1px solid #0000001A;" />
-
-        <table width="100%" cellpadding="0" cellspacing="0" style="border: 2px solid #eee; border-radius: 10px; margin-top: 20px; margin-bottom: 30px;">
-          <tr>
-            <th align="left" style="padding: 10px; font-weight: 600;">MERCHANT</th>
-            <th align="right" style="padding: 10px; font-weight: 600;">VOLUME (₹)</th>
-          </tr>
-        <tr>
-  <td colspan="2" style="padding: 0;">
-    <table width="100%" cellpadding="0" cellspacing="0">
-      <tr>
-        <td style="border-top: 1px solid #0000001A; line-height: 0; font-size: 0;">&nbsp;</td>
+        </td>
       </tr>
     </table>
-  </td>
-</tr>
-          ${merchant_data
-            .filter(item => item.yesterday > 0)
-            .map(item => `
-              <tr>
-                <td style="padding: 8px;">${(item.business_name || "NA").toUpperCase()}</td>
-                <td align="right" style="padding: 8px;">₹${formatNumber(item.yesterday)}</td>
-              </tr>
-            `)
-            .join('')}
-        </table>
-
-        <!-- Gateways Section -->
-        <table width="100%" cellpadding="0" cellspacing="0" style="border: 2px solid #eee; border-radius: 10px; margin-bottom: 30px;">
-          <tr>
-            <th align="left" style="padding: 10px; font-weight: 600;">Payment Gateway</th>
-            <th align="right" style="padding: 10px; font-weight: 600;">VOLUME (₹)</th>
-          </tr>
-         <tr>
-  <td colspan="2" style="padding: 0;">
-    <table width="100%" cellpadding="0" cellspacing="0">
-      <tr>
-        <td style="border-top: 1px solid #0000001A; line-height: 0; font-size: 0;">&nbsp;</td>
-      </tr>
-    </table>
-  </td>
-</tr>
-            ${gateway_data
-              .map((item) => {
-                if (item.yesterday > 0) {
-                  return `
-                    <tr>
-                      <td style="padding: 8px; text-align: left;">${(item.gatewayName || "NA").toUpperCase()}</td>
-                      <td style="padding: 8px; text-align: right;">${formatNumber(item.yesterday) || 0}</td>
-                    </tr>
-                  `;
-                }
-                return ''; // Skip rows with no data
-              })
-              .join('')}
-          </table>
-
-        <!-- Download Button -->
-        <div style="text-align: center; margin-top: 30px;">
-        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #007bff; border-radius: 10px;">
-          <a href="${url}" style="background-color: #007bff; color: white; padding: 12px 20px; text-decoration: none; border-radius: 6px; font-size: 16px; display: inline-block;">Download Full Report</a>
-        </table>
-        </div>
-      </div>
-       <div style="height: 20px;"></div>
-    </div>
+  </div>
       `,
   };
 
