@@ -48,7 +48,7 @@ app.post("/success-Payment-email", async (req, res) => {
             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
               <tr>
                 <td align="center" style="background-color: rgba(0, 0, 0, 0.6) !important; padding: 15px; backdrop-filter: blur(10px) !important;">
-                  <img src="https://res.cloudinary.com/dbr9mrvja/image/upload/v1742885169/eygnaio0rgsjsxkjxbcx.jpg" alt="USDT Logo" width="30" height="30" style="border-radius: 8px; vertical-align: middle;">
+                  <img src="" alt="USDT Logo" width="30" height="30" style="border-radius: 8px; vertical-align: middle;">
                   <h2 style="display: inline-block; margin: 0; font-size: 18px; color: white !important;">USDT Marketplace</h2>
                 </td>
               </tr>
@@ -271,8 +271,15 @@ app.post("/otp", async (req, res) => {
   }
 });
 app.post("/dailyReport", async (req, res) => {
-  const { formattedDate, payhub_data, merchant_data, gateway_data, url }=req.body;
-  const formatNumber = (num) => (num ? Math.round(num).toLocaleString() : '0');
+  const { formattedDate, payhub_data, merchant_data, gateway_data, url } =
+    req.body;
+  const formatNumber = (num) => (num ? Math.round(num).toLocaleString() : "0");
+  const date = new Date(formattedDate);
+  const day = date.getDate();
+  const month = date.toLocaleString("en-US", { month: "long" });
+  const year = date.getFullYear();
+  const weekday = date.toLocaleDateString("en-US", { weekday: "long" });
+  const finalFormat = `${day} ${month} ${year}, ${weekday}`;
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: "akshay2898.as@gmail.com",
@@ -281,41 +288,50 @@ app.post("/dailyReport", async (req, res) => {
     html: `
     <div
   style="font-family: 'General Sans','Segoe UI', sans-serif; margin: 0; padding: 0; background: #F8F8F8; color: #000;">
-  <div style="max-width: 600px; background: #FFF; margin: 10px auto; border-radius: 12px;">
-    <table role="presentation" width="100%" style="height: 40px;">
+  <div style="height: 20px;"></div>
+  <div style="max-width: 600px; background: #FFF; margin: 10px auto; border-radius: 12px; padding-top:15px">
+    <table role="presentation" width="100%" style="height: 90px;">
       <tr>
-        <td
-          style="position: relative; background: linear-gradient(to right, #111111, #383838); padding: 20px; border-top-left-radius: 12px; border-top-right-radius: 12px;">
-          <img src="https://csvpayhub.s3.ap-south-1.amazonaws.com/images/payhubWhite_ivid3r.png" alt="PayHub Logo"
-            style="max-width: 140px; display: block; color: #ffffff;">
+        <td align="center" style="
+      position: relative;
+      padding: 10px 20px;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    ">
+          <img src="https://res.cloudinary.com/dbr9mrvja/image/upload/v1747657007/p_hzyjop.png" alt="PayHub Logo" />
         </td>
       </tr>
       <tr>
-        <td align="right"
-          style=" padding: 10px 20px 10px 20px; font-weight: 600; font-size: 24px; line-height: 100%; letter-spacing: 0%;">
-          ${formattedDate}
+        <td align="center" style="
+      padding: 10px 20px;
+      font-weight: 600;
+      font-size: 20px;
+      line-height: 100%;
+      letter-spacing: 0%;
+    ">
+          ${finalFormat}
         </td>
       </tr>
     </table>
+
     <div style="padding:  20px;">
-      <table width="100%" cellpadding="0" cellspacing="0" style="height: 150px; margin-bottom: 10px;margin-top:20px; ">
+      <table width="100%" cellpadding="0" cellspacing="0" style="height: 150px; margin-bottom: 10px; ">
         <tr>
           <td align="center" valign="middle">
             <div style="font-size: 40px; font-weight: 600; line-height: 100%; margin-bottom: 20px;">
               <strong>₹${formatNumber(payhub_data)}</strong>
             </div>
             <div style="font-size: 24px; font-weight: 500;line-height: 1.2;color: #00000099;">
-              Total Volume
+              Daily Volume
             </div>
           </td>
         </tr>
       </table>
-      <hr style="border: 1px solid #0000001A;" />
       <table width="100%" cellpadding="0" cellspacing="0"
         style="border: 2px solid #eee; border-radius: 10px; margin-top: 30px; margin-bottom: 30px;">
         <tr>
-          <th align="left" style="padding: 10px; font-weight: 600;font-size: 20px;">MERCHANTS</th>
-          <th align="right" style="padding: 10px; font-weight: 600;font-size: 20px;">VOLUME (₹)</th>
+          <th align="left" style="padding: 10px; font-weight: 600;font-size: 18px;">MERCHANTS</th>
+          <th align="right" style="padding: 10px; font-weight: 600;font-size: 18px;">VOLUME (₹)</th>
         </tr>
         <tr>
           <td colspan="2" style="padding: 0;">
@@ -327,20 +343,26 @@ app.post("/dailyReport", async (req, res) => {
           </td>
         </tr>
         ${merchant_data
-        .filter(item => item.yesterday > 0)
-        .map(item => `
+          .filter((item) => item.yesterday > 0)
+          .map(
+            (item) => `
         <tr>
-          <td style="padding: 8px;font-weight: 500;font-size: 20px;">${(item.business_name || "NA").toUpperCase()}</td>
-          <td align="right" style="padding: 8px;font-weight: 500;font-size: 20px;">₹${formatNumber(item.yesterday)}</td>
+          <td style="padding: 8px;font-weight: 500;font-size: 16px;">${(
+            item.business_name || "NA"
+          ).toUpperCase()}</td>
+          <td align="right" style="padding: 8px;font-weight: 500;font-size: 16px;">₹${formatNumber(
+            item.yesterday
+          )}</td>
         </tr>
-        `)
-        .join('')}
+        `
+          )
+          .join("")}
       </table>
       <table width="100%" cellpadding="0" cellspacing="0"
         style="border: 2px solid #eee; border-radius: 10px; margin-bottom: 30px;">
         <tr>
-          <th align="left" style="padding: 10px; font-weight: 600;font-size: 20px;">Payment Gateway</th>
-          <th align="right" style="padding: 10px; font-weight: 600;font-size: 20px;">VOLUME (₹)</th>
+          <th align="left" style="padding: 10px; font-weight: 600;font-size: 18px;">Payment Gateway</th>
+          <th align="right" style="padding: 10px; font-weight: 600;font-size: 18px;">VOLUME (₹)</th>
         </tr>
         <tr>
           <td colspan="2" style="padding: 0;">
@@ -352,20 +374,22 @@ app.post("/dailyReport", async (req, res) => {
           </td>
         </tr>
         ${gateway_data
-        .map((item) => {
-        if (item.yesterday > 0) {
-        return `
+          .map((item) => {
+            if (item.yesterday > 0) {
+              return `
         <tr>
-          <td style="padding: 8px; text-align: left;font-weight: 500;font-size: 20px;">${(item.gatewayName ||
-            "NA").toUpperCase()}</td>
-          <td style="padding: 8px; text-align: right;font-weight: 500;font-size: 20px;">${formatNumber(item.yesterday) ||
-            0}</td>
+          <td style="padding: 8px; text-align: left;font-weight: 500;font-size: 16px;">${(
+            item.gatewayName || "NA"
+          ).toUpperCase()}</td>
+          <td style="padding: 8px; text-align: right;font-weight: 500;font-size: 16px;">${
+            formatNumber(item.yesterday) || 0
+          }</td>
         </tr>
         `;
-        }
-        return '';
-        })
-        .join('')}
+            }
+            return "";
+          })
+          .join("")}
       </table>
       <div style="text-align: center; margin-top: 30px;">
         <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #007bff; border-radius: 10px;">
@@ -378,7 +402,7 @@ app.post("/dailyReport", async (req, res) => {
 
   </div>
   <div style="height: 20px;"></div>
-</div> 
+</div>
       `,
   };
 
@@ -390,8 +414,9 @@ app.post("/dailyReport", async (req, res) => {
   }
 });
 app.post("/invitation", async (req, res) => {
-  const { formattedDate, payhub_data, merchant_data, gateway_data, url }=req.body;
-  const formatNumber = (num) => (num ? Math.round(num).toLocaleString() : '0');
+  const { formattedDate, payhub_data, merchant_data, gateway_data, url } =
+    req.body;
+  const formatNumber = (num) => (num ? Math.round(num).toLocaleString() : "0");
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: "akshay2898.as@gmail.com",
