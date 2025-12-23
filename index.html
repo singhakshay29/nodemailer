@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="UTF-8">
+      <style>
+         body,
+         table,
+         td,
+         a,
+         span,
+         div {
+         -webkit-text-size-adjust: none !important;
+         -ms-text-size-adjust: none !important;
+         }
+         @media only screen and (max-width: 600px) {
+         .column {
+         display: block !important;
+         width: 100% !important;
+         max-width: 100% !important;
+         }
+         .spacer {
+         display: none !important;
+         }
+         .stat-column {
+         display: block !important;
+         width: 100% !important;
+         padding-bottom: 20px !important;
+         }
+         .stat-inner {
+         width: 100% !important;
+         }
+         .container {
+         width: 100% !important;
+         padding-left: 0 !important;
+         padding-right: 0 !important;
+         }
+         }
+      </style>
+   </head>
+   <body>
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation"
+      style="background-color: #F8F8F8; font-family: 'General Sans','Segoe UI', sans-serif; margin: 0; padding: 0; color: #000;"
+      <tr>
+         <td align="center">
+            <table width="100%" cellpadding="0" cellspacing="0" role="presentation"
+               style="max-width: 1018px;  background-color: #ffffff; border-radius: 12px; margin-top:10px;"
+               class="container">
+               <tr >
+                  <td style="padding: 40px;" class="container-padding">
+                     <table role="presentation" width="100%" style="height: 90px;">
+                        <tr>
+                           <td align="left" style="padding: 10px 0px; border-top-left-radius: 12px;">
+                              <img src="https://csvpayhub.s3.ap-south-1.amazonaws.com/images/p_hzyjop.png"
+                                 alt="PayHub Logo"
+                                 style="display: block; width: auto; height: 40px; max-height: 40px; line-height: 1; border: 0;" />
+                           </td>
+                           <td align="right"
+                              style="padding: 10px 0px; border-top-right-radius: 12px; font-weight: 600; font-size: 20px; line-height: 100%; letter-spacing: 0%;">
+                              ${formattedDate}
+                           </td>
+                        </tr>
+                     </table>
+               <tr>
+                  <td style="padding: 0 20px 20px 20px;">
+                     <table width="100%" role="presentation">
+                        <tr>
+                           <td class="column"
+                              style="width: auto; padding: 16px; background-color: #eaf3ff; border-radius: 10px; text-align: center;">
+                              <div style="font-size: 32px; font-weight: 700;">
+                                 ₹${formatNumber(summary.totalVolumeProcessed)}
+                              </div>
+                              <div style="font-size: 18px; color: #666; padding-top: 4px;">Total Volume Processed
+                              </div>
+                           </td>
+                           <td class="spacer" style="width: 30px;"></td>
+                           <td class="column"
+                              style="width: auto; padding: 16px; background-color: #eaf3ff; border-radius: 10px; text-align: center;">
+                              <div style="font-size: 32px; font-weight: 700;">
+                                 ${formatNumber(summary.averageSuccessRate)}
+                              </div>
+                              <div style="font-size: 18px; color: #666; padding-top: 4px;">Average Success Rate
+                              </div>
+                           </td>
+                           <td class="spacer" style="width: 30px;"></td>
+                           <td class="column"
+                              style="width: auto; padding: 16px; background-color: #eaf3ff; border-radius: 10px; text-align: center;">
+                              <div style="font-size: 32px; font-weight: 700;">
+                                 ₹${formatNumber(summary.settlementsProcessed)}
+                              </div>
+                              <div style="font-size: 18px; color: #666; padding-top: 4px;">Settlements Processed
+                              </div>
+                           </td>
+                        </tr>
+                     </table>
+                  </td>
+               </tr>
+               <tr>
+                  <td style="padding: 0 20px 20px 20px;">
+                     <table width="100%" role="presentation" cellpadding="0" cellspacing="0"
+                        style="border: 1px solid #eee; border-radius: 10px;padding: 16px">
+                        <thead>
+                           <tr style="background-color: #fff;">
+                              <th align="left"
+                                 style="padding: 8px; font-size: 18px; font-weight: bold; border-bottom: 1px solid #eee;">
+                                 Merchant
+                              </th>
+                              <th align="center"
+                                 style="padding: 8px; font-size: 18px; font-weight: bold; border-bottom: 1px solid #eee;">
+                                 Today’s Volume
+                              </th>
+                              <th align="center"
+                                 style="padding: 8px; font-size: 18px; font-weight: bold; border-bottom: 1px solid #eee;">
+                                 Successful Trans.
+                              </th>
+                              <th align="center"
+                                 style="padding: 8px; font-size: 18px; font-weight: bold; border-bottom: 1px solid #eee;">
+                                 Success Rate
+                              </th>
+                              <th align="right"
+                                 style="padding: 8px; font-size: 18px; font-weight: bold; border-bottom: 1px solid #eee;">
+                                 Last Settlement
+                              </th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr>
+                              <td style="padding: 8px; font-weight: 700; font-size: 16px; color: #00000099;">
+                                 GENNPAY
+                              </td>
+                              <td align="center"
+                                 style="padding: 8px; font-weight: 500; font-size: 16px; color: #00000099;">
+                                 ₹8,239,901
+                              </td>
+                              <td align="center"
+                                 style="padding: 8px; font-weight: 500; font-size: 16px; color: #00000099;">202
+                              </td>
+                              <td align="center"
+                                 style="padding: 8px; font-weight: 500; font-size: 16px; color: #00000099;">94.6%
+                              </td>
+                              <td align="right"
+                                 style="padding: 8px; font-weight: 500; font-size: 16px; color: #00000099;">
+                                 ₹1,25,000
+                              </td>
+                           </tr>
+                           <tr>
+                              <td style="padding: 8px; font-weight: 700;font-size: 16px; color: #00000099;">
+                                 SPARKET
+                              </td>
+                              <td align="center"
+                                 style="padding: 8px; font-weight: 500; font-size: 16px; color: #00000099;">
+                                 ₹4,402,076
+                              </td>
+                              <td align="center"
+                                 style="padding: 8px; font-weight: 500; font-size: 16px; color: #00000099;">211
+                              </td>
+                              <td align="center"
+                                 style="padding: 8px; font-weight: 500; font-size: 16px; color: #00000099;">93.1%
+                              </td>
+                              <td align="right"
+                                 style="padding: 8px; font-weight: 500; font-size: 16px; color: #00000099;">
+                                 ₹45,200
+                              </td>
+                           </tr>
+                           <tr>
+                              <td style="padding: 9px; font-weight: 700;font-size: 16px; color: #00000099;">
+                                 CARDPAY
+                              </td>
+                              <td align="center"
+                                 style="padding: 8px; font-weight: 500; font-size: 16px; color: #00000099;">
+                                 ₹6,569,324
+                              </td>
+                              <td align="center"
+                                 style="padding: 8px; font-weight: 500; font-size: 16px; color: #00000099;">36
+                              </td>
+                              <td align="center"
+                                 style="padding: 8px; font-weight: 500; font-size: 16px; color: #00000099;">54.6%
+                              </td>
+                              <td align="right"
+                                 style="padding: 8px; font-weight: 500; font-size: 16px; color: #00000099;">
+                                 ₹2,30,000
+                              </td>
+                           </tr>
+                           <tr>
+                              <td style="padding: 8px; font-weight: 700;font-size: 16px; color: #00000099;">PAYHUB
+                                 TEST
+                              </td>
+                              <td align="center"
+                                 style="padding: 8px; font-weight: 500; font-size: 16px; color: #00000099;">
+                                 ₹2,855,473
+                              </td>
+                              <td align="center"
+                                 style="padding: 8px; font-weight: 500; font-size: 16px; color: #00000099;">123
+                              </td>
+                              <td align="center"
+                                 style="padding: 8px; font-weight: 500; font-size: 16px; color: #00000099;">91.1%
+                              </td>
+                              <td align="right"
+                                 style="padding: 8px; font-weight: 500; font-size: 16px; color: #00000099;">
+                                 ₹2,300
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </td>
+               </tr>
+               <table width="100%" cellpadding="0" cellspacing="0" role="presentation"
+                  style="background-color: #007bff; border-radius: 10px; margin-bottom:10px">
+                  <tr>
+                     <td align="center" style="padding: 12px 20px;">
+                        <a href="${url}"
+                           style="display: inline-block; background-color: #007bff; text-decoration: none; border-radius: 6px;">
+                        <span
+                           style="color: #ffffff !important; font-size: 20px; font-weight: 500; font-family: 'Segoe UI', sans-serif; -webkit-text-size-adjust: none; -ms-text-size-adjust: none; mso-style-textfill-type:solid; mso-style-textfill-fill-color:#ffffff;">
+                        Download Full Report
+                        </span>
+                        </a>
+                     </td>
+                  </tr>
+               </table>
+               </td>
+               </tr>
+            </table>
+         </td>
+      </tr>
+      <tr>
+         <td>
+            <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+               <tr>
+                  <td height="20" style="line-height: 20px; font-size: 0;">&nbsp;</td>
+               </tr>
+            </table>
+         </td>
+      </tr>
+      </table>
+   </body>
+</html>
